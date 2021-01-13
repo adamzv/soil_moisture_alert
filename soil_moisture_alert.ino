@@ -1,7 +1,9 @@
+// Used client library for Twilio API
+// https://github.com/ademuri/twilio-esp32-client
 #include "twilio.hpp"
 
-#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  1800        /* Time ESP32 will go to sleep (in seconds) */
+#define uS_TO_S_FACTOR 1000000   // Conversion factor for micro seconds to seconds
+#define TIME_TO_SLEEP  1800      // Time ESP32 will go to sleep (in seconds)
 
 static const char *ssid = "";
 static const char *password = "";
@@ -11,8 +13,6 @@ static const char *auth_token = "";
 
 static const char *from_number = "+";
 static const char *to_number = "+";
-
-//static const char *message = "My soil is drying out, please water me!";
 
 int sensorPin = 13;
 int sensorValue = 0;
@@ -27,14 +27,15 @@ int sensorMax = 1840;
 Twilio *twilio;
 
 void setup() {
-  // put your setup code here, to run once:
   pinMode(sensorPin, INPUT);
   Serial.begin(115200);
 
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
+  // "warming up" moisture sensor
   sensorValue = analogRead(sensorPin);
   delay(500);
+  // reading correct value from the sensor
   sensorValue = analogRead(sensorPin);
   Serial.print(sensorValue);
  
