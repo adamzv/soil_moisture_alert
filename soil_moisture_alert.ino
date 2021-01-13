@@ -37,29 +37,29 @@ void setup() {
   delay(500);
   // reading correct value from the sensor
   sensorValue = analogRead(sensorPin);
-  Serial.print(sensorValue);
- 
+  // mapping analog value to range <0;100>
   sensorValue = map(sensorValue, sensorMin, sensorMax, 0, 100);
   sensorValue = constrain(sensorValue, 0, 100);
   
-  Serial.print(" ");
+  Serial.print("Soil moisture: ");
   Serial.println(sensorValue);
-  
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println("\nConnected!");
 
-  twilio = new Twilio(account_sid, auth_token);
-  delay(1000);
-
+  // formatted SMS message with moisture level
   char message[80];
   sprintf(message, "My soil is drying out, please water me! Current soil moisture is at %d%%.", sensorValue);
   String response;
   if (sensorValue < 30) {
+    WiFi.begin(ssid, password);
+    Serial.print("Connecting");
+    while (WiFi.status() != WL_CONNECTED) {
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println("\nConnected!");
+  
+    twilio = new Twilio(account_sid, auth_token);
+    delay(1000);
+
     bool request = twilio->send_message(to_number, from_number, message, response);
     if (request) {
       Serial.println("Sent message successfully!");
@@ -73,4 +73,5 @@ void setup() {
 }
 
 void loop() {
+  // loop is not necessary
 }
